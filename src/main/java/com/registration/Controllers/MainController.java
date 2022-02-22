@@ -36,24 +36,38 @@ public class MainController {
     @PostMapping("/register")
     public Registration register(@RequestBody Registration registration) throws Exception {
         Registration reg;
+
+        String nameRegex = "^[A-Za-z ]{3,30}$";
+        Pattern pattername = Pattern.compile(nameRegex);
+        Matcher matchername = pattername.matcher(registration.getFirstname());
+        if (!matchername.matches()){
+            throw new Exception("name is too short");
+        }
+
         String emailRegex = "^(.+)@(.+)$";
-//        String regex="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(registration.getEmail());
-        System.out.println("email "+matcher.matches());
-
+        if(!matcher.matches())
+        {
+            throw new Exception("email format wrong ");
+        }
 
         String passwordValidation="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
         Pattern patternn = Pattern.compile(passwordValidation);
         Matcher matcherr = patternn.matcher(registration.getPassword());
-        System.out.println("password "+matcherr.matches());
-
+        if(!matcherr.matches())
+        {
+            throw new Exception("must include a capital alphabet and a small, a number and special character,");
+        }
 
         String mobileValidation="[6789][0-9]{9}";
         Pattern patternnn = Pattern.compile(mobileValidation);
         Matcher matcherrr = patternnn.matcher(registration.getMobile());
-        System.out.println("mobile "+matcherrr.matches());
-        if(matcher.matches()==true && matcherr.matches()==true && matcherrr.matches()==true){
+        if(!matcherr.matches())
+        {
+            throw new Exception("please enter right number format");
+        }
+        if(matcher.matches() && matcherr.matches() && matcherrr.matches() && matchername.matches()){
             registration.setPassword(this.bCryptPasswordEncoder.encode(registration.getPassword()));
             reg=customUserDetailsService.addUser(registration);
             return reg;
@@ -77,7 +91,7 @@ public class MainController {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         System.out.println("matcher "+matcher.matches());
-        if(matcher.matches()==true)
+        if(matcher.matches())
         {
             return customUserDetailsService.getUser(email);
         }else{
@@ -90,7 +104,6 @@ public class MainController {
     {
         Registration reg;
         String emailRegex = "^(.+)@(.+)$";
-//        String regex="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(registration.getEmail());
         System.out.println("email "+matcher.matches());
@@ -106,13 +119,21 @@ public class MainController {
         Pattern patternnn = Pattern.compile(mobileValidation);
         Matcher matcherrr = patternnn.matcher(registration.getMobile());
         System.out.println("mobile "+matcherrr.matches());
-        if(matcher.matches()==true && matcherr.matches()==true && matcherrr.matches()==true){
+        if(matcher.matches() && matcherr.matches() && matcherrr.matches()){
         registration.setPassword(this.bCryptPasswordEncoder.encode(registration.getPassword()));
         reg=customUserDetailsService.update(email, registration);
         return reg;
         }else {
             throw new UsernameNotFoundException("user enter wrong format values");
         }
+    }
+
+    @DeleteMapping("/delete/{email}")
+    public String userDelete(@PathVariable("email") String email)
+    {
+        System.out.println("email");
+        customUserDetailsService.deleteByEmail(email);
+        return "success"+email;
     }
 
 

@@ -1,6 +1,6 @@
 package com.registration.Controllers;
 
-import com.registration.Entities.Login;
+import com.registration.Entities.Registration;
 import com.registration.services.loginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,21 +20,27 @@ public class loginController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Login login)
-    {
+    public ResponseEntity<?> login(@RequestBody Registration registration) throws Exception {
         String emailRegex = "^(.+)@(.+)$";
-//        String regex="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
         Pattern pattern = Pattern.compile(emailRegex);
-        Matcher matcher = pattern.matcher(login.getEmail());
-        System.out.println("matcher "+matcher.matches());
+        Matcher matcher = pattern.matcher(registration.getEmail());
+        System.out.println("email "+registration.getEmail());
+        if(!matcher.matches())
+        {
+            throw new Exception("email format wrong ");
+        }
 
-//        String mobileRegex="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$";
-        String passwordValidation="/^(?=.*\\d)(?=.*[a-zA-Z])[a-zA-Z0-9]{7,}$/";
+        String passwordValidation="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
         Pattern patternn = Pattern.compile(passwordValidation);
-        Matcher matcherr = pattern.matcher(login.getPassword());
-        System.out.println("matcherr "+matcher.matches());
-        if(matcher.matches()==true && matcherr.matches()==true){
-        return LoginService.login(login.getEmail(), login.getPassword());
+        Matcher matcherr = patternn.matcher(registration.getPassword());
+        System.out.println("password "+registration.getPassword());
+        if(!matcherr.matches())
+        {
+            throw new Exception("must include a capital alphabet and a small, a number and special character,");
+        }
+
+        if(matcher.matches() && matcherr.matches()){
+        return LoginService.login(registration.getEmail(), registration.getPassword());
         }else {
             System.out.println("else");
             throw new UsernameNotFoundException("user credential wrong");

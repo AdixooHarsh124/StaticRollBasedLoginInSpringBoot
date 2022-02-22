@@ -18,18 +18,15 @@ public class loginService {
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    private RegistrationRepository registrationRepository;
-
-    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     private JwtUtil jwtUtil;
 
-    public ResponseEntity<?>login(String email,String password)
+    public ResponseEntity<?> login(String email,String password)
     {
         try{
-            Registration registration=registrationRepository.getById(email);
+            Registration registration=customUserDetailsService.getUser(email);
             boolean isPasswordMatch =bCryptPasswordEncoder.matches(password, registration.getPassword());
             if(isPasswordMatch!=true){
                 throw new UsernameNotFoundException("user credentials wrong");
