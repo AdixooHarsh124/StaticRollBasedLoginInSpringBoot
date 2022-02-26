@@ -1,7 +1,6 @@
 package com.registration.services;
 
 import com.registration.Entities.Registration;
-import com.registration.Repository.RegistrationRepository;
 import com.registration.helper.JwtUtil;
 import com.registration.model.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;

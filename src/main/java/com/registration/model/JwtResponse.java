@@ -1,10 +1,5 @@
 package com.registration.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-
-
 public class JwtResponse {
     String token;
 

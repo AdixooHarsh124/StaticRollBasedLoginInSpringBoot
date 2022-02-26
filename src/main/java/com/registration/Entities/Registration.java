@@ -1,7 +1,7 @@
 package com.registration.Entities;
 
 import com.sun.istack.NotNull;
-import java.lang.Integer;
+
 import javax.persistence.*;
 
 /**
@@ -16,11 +16,33 @@ public class Registration {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="rollNumber")
 	private Integer rollNumber;
-   
+
+	@Column(name="Authority")
+	private String role;
+
+	public String getEnable() {
+		return enable;
+	}
+
+	public void setEnable(String enable) {
+		this.enable = enable;
+	}
+
+	@Column(name="enable")
+	private String enable;
+
     @Column(name="username")
     private String firstname;
 
-    @Column(name="lastname")
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	@Column(name="lastname")
     private String lastname;
 
     @Column(name="email",unique = true, nullable = false)

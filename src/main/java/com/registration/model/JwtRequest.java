@@ -1,11 +1,5 @@
 package com.registration.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-
 public class JwtRequest {
 
     private String username;
